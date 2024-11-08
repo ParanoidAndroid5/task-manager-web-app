@@ -1,0 +1,120 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  
+    .top-nav {
+      background-color: #073b9a;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+  
+      h1 {
+        font-size: 20px;
+        margin: 0;
+      }
+  
+      .top-menu {
+        display: flex;
+        gap: 20px;
+  
+        span {
+          cursor: pointer;
+          color: white;
+          font-size: 14px;
+        }
+  
+        span:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  
+    .main-content {
+      display: flex;
+      flex: 1;
+  
+      .sidebar {
+        width: 200px;
+        background-color: #073b9a;
+        color: white;
+        padding: 20px;
+  
+        ul {
+          list-style: none;
+          padding: 0;
+  
+          li {
+            padding: 10px 0;
+            cursor: pointer;
+          }
+  
+          li:hover {
+            background-color: #0a58ca;
+          }
+        }
+      }
+  
+      .board {
+        flex: 1;
+        padding: 20px;
+        background-color: #f4f5f7;
+  
+        h2 {
+          font-size: 24px;
+          margin-bottom: 20px;
+        }
+  
+        .board-columns {
+          display: flex;
+          gap: 20px;
+        }
+  
+        .column {
+          background-color: #e1e4e8;
+          border-radius: 5px;
+          padding: 10px;
+          width: 300px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+  
+          h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+          }
+  
+          .card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: move; /* Sürüklenebilir olduğunu belirtmek için */
+  
+            h4 {
+              font-size: 16px;
+              margin-bottom: 5px;
+            }
+  
+            p {
+              font-size: 14px;
+              color: #555;
+              margin-bottom: 5px;
+            }
+  
+            .label {
+              background-color: #073b9a;
+              color: white;
+              padding: 5px;
+              border-radius: 3px;
+              font-size: 12px;
+            }
+          }
+        }
+      }
+    }
+  }
+  
