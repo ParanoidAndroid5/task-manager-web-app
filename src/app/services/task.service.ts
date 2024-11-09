@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Task } from '../models/task.model';
+import { Task, TaskComment } from '../models/task.model';
 import { environment } from './environment'; 
 
 @Injectable({
@@ -52,4 +52,15 @@ export class TaskService {
     const params = new HttpParams().set('username', username);
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers, params });
   }
+  addComment(taskId: number, content: { content: string }): Observable<TaskComment> {
+    const headers = this.getAuthHeaders();
+    const username = sessionStorage.getItem('username') || '';
+    const params = new HttpParams().set('username', username);
+    return this.http.post<TaskComment>(`${this.apiUrl}/${taskId}/comments`, content, { headers, params });
+}
+
+    getComments(taskId: number): Observable<TaskComment[]> {
+        const headers = this.getAuthHeaders();
+        return this.http.get<TaskComment[]>(`${this.apiUrl}/${taskId}/comments`, { headers });
+    }
 }

@@ -37,33 +37,33 @@
           <!-- YAPILACAKLAR Sütunu -->
           <div class="column" cdkDropList id="todoList" [cdkDropListData]="todo" [cdkDropListConnectedTo]="['inProgressList', 'doneList']" (cdkDropListDropped)="drop($event)">
             <h3>YAPILACAKLAR</h3>
-            <div class="card" *ngFor="let task of todo" cdkDrag>
+            <div class="card" *ngFor="let task of todo" cdkDrag (click)="openTaskDetail(task)">
               <h4>{{ task.title }}</h4>
               <p>{{ task.description }}</p>
               <span class="label">Öncelik: {{ task.priority }}</span>
-              <button (click)="deleteTask(task)">Sil</button>
+              <button (click)="deleteTask(task); $event.stopPropagation()">Sil</button>
             </div>
           </div>
   
           <!-- DEVAM EDENLER Sütunu -->
           <div class="column" cdkDropList id="inProgressList" [cdkDropListData]="inProgress" [cdkDropListConnectedTo]="['todoList', 'doneList']" (cdkDropListDropped)="drop($event)">
             <h3>DEVAM EDENLER</h3>
-            <div class="card" *ngFor="let task of inProgress" cdkDrag>
+            <div class="card" *ngFor="let task of inProgress" cdkDrag (click)="openTaskDetail(task)">
               <h4>{{ task.title }}</h4>
               <p>{{ task.description }}</p>
               <span class="label">Öncelik: {{ task.priority }}</span>
-              <button (click)="deleteTask(task)">Sil</button>
+              <button (click)="deleteTask(task); $event.stopPropagation()">Sil</button>
             </div>
           </div>
   
           <!-- TAMAMLANANLAR Sütunu -->
           <div class="column" cdkDropList id="doneList" [cdkDropListData]="done" [cdkDropListConnectedTo]="['todoList', 'inProgressList']" (cdkDropListDropped)="drop($event)">
             <h3>TAMAMLANANLAR</h3>
-            <div class="card" *ngFor="let task of done" cdkDrag>
+            <div class="card" *ngFor="let task of done" cdkDrag (click)="openTaskDetail(task)">
               <h4>{{ task.title }}</h4>
               <p>{{ task.description }}</p>
               <span class="label">{{ task.status }}</span>
-              <button (click)="deleteTask(task)">Sil</button>
+              <button (click)="deleteTask(task); $event.stopPropagation()">Sil</button>
             </div>
           </div>
         </div>
@@ -84,5 +84,12 @@
         </div>
       </div>
     </div>
+  
+    <!-- Görev Detay Popup -->
+    <app-task-detail
+      *ngIf="selectedTask"
+      [task]="selectedTask"
+      (closeDetail)="closeTaskDetail()"
+    ></app-task-detail>
   </div>
   
