@@ -9,6 +9,7 @@
         <span>Gösterge Tabloları</span>
         <span>Takımlar</span>
         <span>Uygulamalar</span>
+        <span (click)="logout()" style="cursor: pointer; color: white;">Çıkış Yap</span>
       </div>
     </header>
   
@@ -40,6 +41,7 @@
               <h4>{{ task.title }}</h4>
               <p>{{ task.description }}</p>
               <span class="label">Öncelik: {{ task.priority }}</span>
+              <button (click)="deleteTask(task)">Sil</button>
             </div>
           </div>
   
@@ -50,6 +52,7 @@
               <h4>{{ task.title }}</h4>
               <p>{{ task.description }}</p>
               <span class="label">Öncelik: {{ task.priority }}</span>
+              <button (click)="deleteTask(task)">Sil</button>
             </div>
           </div>
   
@@ -60,8 +63,24 @@
               <h4>{{ task.title }}</h4>
               <p>{{ task.description }}</p>
               <span class="label">{{ task.status }}</span>
+              <button (click)="deleteTask(task)">Sil</button>
             </div>
           </div>
+        </div>
+  
+        <!-- Yeni Görev Ekleme Formu -->
+        <div class="new-task-form">
+          <h3>Yeni Görev Ekle</h3>
+          <form (ngSubmit)="addTask()">
+            <input type="text" [(ngModel)]="newTask.title" name="title" placeholder="Başlık" required />
+            <textarea [(ngModel)]="newTask.description" name="description" placeholder="Açıklama"></textarea>
+            <select [(ngModel)]="newTask.priority" name="priority">
+              <option value="LOW">Düşük</option>
+              <option value="MEDIUM">Orta</option>
+              <option value="HIGH">Yüksek</option>
+            </select>
+            <button type="submit">Ekle</button>
+          </form>
         </div>
       </div>
     </div>

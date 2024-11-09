@@ -16,6 +16,7 @@ export class LoginComponent {
   login() {
     this.authService.login(this.username, this.password).subscribe({
       next: () => {
+        console.log('Giriş sonrası sessionStorage:', sessionStorage.getItem('username')); // Debug için
         alert('Giriş başarılı!');
         this.router.navigate(['/dashboard']); 
       },
