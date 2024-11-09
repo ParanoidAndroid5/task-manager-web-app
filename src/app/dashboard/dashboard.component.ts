@@ -14,6 +14,7 @@ export class DashboardComponent implements OnInit {
   todo: Task[] = [];
   inProgress: Task[] = [];
   done: Task[] = [];
+  selectedTask: Task | null = null;
 
   newTask: Task = {
     title: '',
@@ -41,6 +42,15 @@ export class DashboardComponent implements OnInit {
         alert('Görevler yüklenirken bir hata oluştu.');
       }
     });
+  }
+
+  // Görev Detayını Açma
+  openTaskDetail(task: Task): void {
+    this.selectedTask = task;  
+  }
+  
+  closeTaskDetail(): void {
+    this.selectedTask = null;  
   }
 
   // Sürükle-bırak işlemi

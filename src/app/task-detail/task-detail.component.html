@@ -1,0 +1,27 @@
+<div class="task-detail-modal" *ngIf="task">
+    <div class="modal-content">
+      <!-- Sağ üst köşede kapatma ikonu -->
+      <button class="close-button" (click)="close()">×</button>
+  
+      <h2>{{ task.title }}</h2>
+      <p><strong>Açıklama:</strong> {{ task.description }}</p>
+      <p><strong>Öncelik:</strong> {{ task.priority }}</p>
+      <p><strong>Durum:</strong> {{ task.status }}</p>
+      <p><strong>Atanan Kişi:</strong> {{ task.assigneeUsername }}</p> <!-- Atanan kişiyi göster -->
+  
+      <!-- Yorum ekleme alanı -->
+      <div class="comment-section">
+        <h3>Yorum Ekle</h3>
+        <textarea [(ngModel)]="newComment" placeholder="Yorumunuzu yazın..."></textarea>
+        <button (click)="addComment()">Yorumu Gönder</button>
+      </div>
+  
+      <!-- Mevcut yorumları listeleme -->
+      <div class="comments-list" *ngIf="comments.length > 0">
+        <h3>Yorumlar</h3>
+        <div *ngFor="let comment of comments">
+            <p><strong>{{ comment.username }}:</strong> {{ comment.content }}</p> <!-- Yorum yapan kullanıcı adı ve içerik -->
+        </div>
+      </div>
+    </div>
+  </div>
