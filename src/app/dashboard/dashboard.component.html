@@ -85,7 +85,6 @@
               </div>
             </div>
           </div>
-
           <!-- Yeni Görev Ekleme Formu (Projeye Özel) -->
           <div class="new-task-form">
             <h3>Yeni Görev Ekle</h3>
@@ -97,17 +96,20 @@
                 <option value="MEDIUM">Orta</option>
                 <option value="HIGH">Yüksek</option>
               </select>
-              <!-- Proje seçme alanını kaldırdık -->
+              <!-- Atanan Kullanıcı Seçimi (opsiyonel) -->
+              <select [(ngModel)]="selectedAssigneeByProject[project.id]" name="assignee-{{project.id}}">
+                <option value="">Atanmamış</option>
+                <option *ngFor="let user of usersByProject[project.id]" [value]="user.username">{{ user.username }}</option>
+              </select>
               <button type="submit">Ekle</button>
             </form>
           </div>
-        </div>
-      </div>
       <!-- Görev Detay Popup -->
       <app-task-detail
         *ngIf="selectedTask"
         [task]="selectedTask"
         (closeDetail)="closeTaskDetail()"
+        (taskUpdated)="onTaskUpdated($event)"
       ></app-task-detail>
     </div>
   </div>

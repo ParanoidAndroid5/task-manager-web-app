@@ -29,7 +29,7 @@ export class TaskService {
     return this.http.get<Task[]>(`${this.apiUrl}`, { headers });
   }
 
-  getTasksByProject(projectId: number): Observable<Task[]> { // Yeni metod
+  getTasksByProject(projectId: number): Observable<Task[]> {
     const headers = this.getAuthHeaders();
     return this.http.get<Task[]>(`${this.apiUrl}/project/${projectId}`, { headers });
   }

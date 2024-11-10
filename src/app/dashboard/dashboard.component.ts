@@ -17,6 +17,7 @@ export class DashboardComponent implements OnInit {
   tasksByProject: { [key: number]: Task[] } = {}; // Projeye göre görevler
   usersByProject: { [key: number]: any[] } = {}; // Projeye göre kullanıcılar
   selectedTask: Task | null = null;
+  selectedAssigneeByProject: { [key: number]: string } = {};
 
   // Her proje için ayrı yeni görev nesneleri
   newTaskByProject: { [key: number]: Task } = {};
@@ -61,8 +62,11 @@ export class DashboardComponent implements OnInit {
             description: '',
             priority: 'MEDIUM',
             status: 'TODO',
-            projectId: project.id
+            projectId: project.id,
+            assigneeUsername: undefined
           };
+          // Seçili assignee başlangıçta boş
+          this.selectedAssigneeByProject[project.id] = '';
         });
       },
       error: (error) => {
@@ -133,7 +137,7 @@ export class DashboardComponent implements OnInit {
   // Yeni görev ekleme (Projeye özel)
   addTask(projectId: number): void {
     const taskToAdd = this.newTaskByProject[projectId];
-    
+
     if (!taskToAdd.title.trim()) {
       alert('Görev başlığı boş olamaz.');
       return;
@@ -143,6 +147,9 @@ export class DashboardComponent implements OnInit {
       alert('Geçersiz proje.');
       return;
     }
+
+    // Seçili assignee'yi atayın (opsiyonel)
+    taskToAdd.assigneeUsername = this.selectedAssigneeByProject[projectId] || undefined;
 
     this.taskService.createTask(taskToAdd).subscribe({
       next: (task) => {
@@ -158,8 +165,11 @@ export class DashboardComponent implements OnInit {
           description: '',
           priority: 'MEDIUM',
           status: 'TODO',
-          projectId: projectId
+          projectId: projectId,
+          assigneeUsername: undefined
         };
+        // Seçili assignee'yi sıfırla
+        this.selectedAssigneeByProject[projectId] = '';
       },
       error: (error) => {
         console.error('Görev oluşturulurken bir hata oluştu', error);
@@ -180,6 +190,23 @@ export class DashboardComponent implements OnInit {
           alert('Görev silinirken bir hata oluştu.');
         }
       });
+    }
+  }
+ //task birine assign edildikten sonra taskı güncelle
+  onTaskUpdated(updatedTask: Task): void {
+    const projectId = updatedTask.projectId!;
+    const tasks = this.tasksByProject[projectId];
+
+    if (tasks) {
+      const index = tasks.findIndex(t => t.id === updatedTask.id);
+      if (index !== -1) {
+        tasks[index] = updatedTask;
+      }
+    }
+
+    // Eğer seçili görev güncellendiyse, selectedTask değişkenini de güncelle
+    if (this.selectedTask && this.selectedTask.id === updatedTask.id) {
+      this.selectedTask = updatedTask;
     }
   }
 
