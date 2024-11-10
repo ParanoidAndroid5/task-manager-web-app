@@ -26,41 +26,36 @@ export class TaskService {
 
   getTasks(): Observable<Task[]> {
     const headers = this.getAuthHeaders();
-    const username = sessionStorage.getItem('username') || '';
-    const params = new HttpParams().set('username', username);
-    return this.http.get<Task[]>(`${this.apiUrl}`, { headers, params });
+    return this.http.get<Task[]>(`${this.apiUrl}`, { headers });
+  }
+
+  getTasksByProject(projectId: number): Observable<Task[]> { // Yeni metod
+    const headers = this.getAuthHeaders();
+    return this.http.get<Task[]>(`${this.apiUrl}/project/${projectId}`, { headers });
   }
 
   createTask(task: Task): Observable<Task> {
     const headers = this.getAuthHeaders();
-    const username = sessionStorage.getItem('username') || '';
-    console.log('createTask username:', username); // Debug için
-    const params = new HttpParams().set('username', username);
-    return this.http.post<Task>(`${this.apiUrl}`, task, { headers, params });
+    return this.http.post<Task>(`${this.apiUrl}`, task, { headers });
   }
 
   updateTask(task: Task): Observable<Task> {
     const headers = this.getAuthHeaders();
-    const username = sessionStorage.getItem('username') || '';
-    const params = new HttpParams().set('username', username);
-    return this.http.put<Task>(`${this.apiUrl}/${task.id}`, task, { headers, params });
+    return this.http.put<Task>(`${this.apiUrl}/${task.id}`, task, { headers });
   }
 
   deleteTask(id: number): Observable<void> {
     const headers = this.getAuthHeaders();
-    const username = sessionStorage.getItem('username') || '';
-    const params = new HttpParams().set('username', username);
-    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers, params });
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers });
   }
+
   addComment(taskId: number, content: { content: string }): Observable<TaskComment> {
     const headers = this.getAuthHeaders();
-    const username = sessionStorage.getItem('username') || '';
-    const params = new HttpParams().set('username', username);
-    return this.http.post<TaskComment>(`${this.apiUrl}/${taskId}/comments`, content, { headers, params });
-}
+    return this.http.post<TaskComment>(`${this.apiUrl}/${taskId}/comments`, content, { headers });
+  }
 
-    getComments(taskId: number): Observable<TaskComment[]> {
-        const headers = this.getAuthHeaders();
-        return this.http.get<TaskComment[]>(`${this.apiUrl}/${taskId}/comments`, { headers });
-    }
+  getComments(taskId: number): Observable<TaskComment[]> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<TaskComment[]>(`${this.apiUrl}/${taskId}/comments`, { headers });
+  }
 }
