@@ -1,27 +1,38 @@
 <div class="task-detail-modal" *ngIf="task">
-    <div class="modal-content">
-      <!-- Sağ üst köşede kapatma ikonu -->
-      <button class="close-button" (click)="close()">×</button>
-  
-      <h2>{{ task.title }}</h2>
-      <p><strong>Açıklama:</strong> {{ task.description }}</p>
-      <p><strong>Öncelik:</strong> {{ task.priority }}</p>
-      <p><strong>Durum:</strong> {{ task.status }}</p>
-      <p><strong>Atanan Kişi:</strong> {{ task.assigneeUsername }}</p> <!-- Atanan kişiyi göster -->
-  
-      <!-- Yorum ekleme alanı -->
-      <div class="comment-section">
-        <h3>Yorum Ekle</h3>
-        <textarea [(ngModel)]="newComment" placeholder="Yorumunuzu yazın..."></textarea>
-        <button (click)="addComment()">Yorumu Gönder</button>
-      </div>
-  
-      <!-- Mevcut yorumları listeleme -->
-      <div class="comments-list" *ngIf="comments.length > 0">
-        <h3>Yorumlar</h3>
-        <div *ngFor="let comment of comments">
-            <p><strong>{{ comment.username }}:</strong> {{ comment.content }}</p> <!-- Yorum yapan kullanıcı adı ve içerik -->
-        </div>
+  <div class="modal-content">
+    <!-- Sağ üst köşede kapatma ikonu -->
+    <button class="close-button" (click)="close()">×</button>
+
+    <h2>{{ task.title }}</h2>
+    <p><strong>Açıklama:</strong> {{ task.description }}</p>
+    <p><strong>Öncelik:</strong> {{ task.priority }}</p>
+    <p><strong>Durum:</strong> {{ task.status }}</p>
+    <p><strong>Oluşturan Kişi:</strong> {{ task.username }}</p>
+    <p><strong>Atanan Kişi:</strong> {{ task.assigneeUsername || 'Atanmamış' }}</p>
+
+    <!-- Atanan kişiyi değiştirme -->
+    <div class="assignee-section">
+      <label for="assigneeSelect">Atanan Kişiyi Değiştir:</label>
+      <select id="assigneeSelect" [(ngModel)]="selectedAssignee" name="assigneeSelect">
+        <option value="">Atanmamış</option>
+        <option *ngFor="let user of projectUsers" [value]="user.username">{{ user.username }}</option>
+      </select>
+      <button (click)="updateAssignee()">Güncelle</button>
+    </div>
+
+    <!-- Yorum ekleme alanı -->
+    <div class="comment-section">
+      <h3>Yorum Ekle</h3>
+      <textarea [(ngModel)]="newComment" placeholder="Yorumunuzu yazın..."></textarea>
+      <button (click)="addComment()">Yorumu Gönder</button>
+    </div>
+
+    <!-- Mevcut yorumları listeleme -->
+    <div class="comments-list" *ngIf="comments.length > 0">
+      <h3>Yorumlar</h3>
+      <div *ngFor="let comment of comments">
+        <p><strong>{{ comment.username }}:</strong> {{ comment.content }}</p>
       </div>
     </div>
   </div>
+</div>

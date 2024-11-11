@@ -11,6 +11,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
 import { TaskDetailComponent } from './task-detail/task-detail.component';
+import { FilterStatusPipe } from './module/filter-status.pipe';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { TaskDetailComponent } from './task-detail/task-detail.component';
     LoginComponent,
     DashboardComponent,
     TaskDetailComponent,
+    FilterStatusPipe
   ],
   imports: [
     BrowserModule,
@@ -26,7 +28,7 @@ import { TaskDetailComponent } from './task-detail/task-detail.component';
     HttpClientModule,
     AppRoutingModule,
     DragDropModule,
-    MatIconModule
+    MatIconModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

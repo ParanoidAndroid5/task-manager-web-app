@@ -6,6 +6,7 @@ export interface Task {
     status: 'TODO' | 'IN_PROGRESS' | 'DONE';
     username?: string;
     assigneeUsername?: string;
+    projectId?: number | null;
   }
 
   export interface TaskComment {
