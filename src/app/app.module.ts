@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { TaskDetailComponent } from './task-detail/task-detail.component';
 import { FilterStatusPipe } from './module/filter-status.pipe';
 import { ProjectsComponent } from './components/projects/projects.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { ProjectsComponent } from './components/projects/projects.component';
     DashboardComponent,
     TaskDetailComponent,
     FilterStatusPipe,
-    ProjectsComponent
+    ProjectsComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

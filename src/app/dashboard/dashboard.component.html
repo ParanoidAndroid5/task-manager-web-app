@@ -3,13 +3,22 @@
   <header class="top-nav">
     <h1>Görev Yöneticisi</h1>
     <div class="top-menu">
-      <span>Çalışmalarınız</span>
-      <span>Projeler</span>
-      <span>Filtreler</span>
-      <span>Gösterge Tabloları</span>
-      <span>Takımlar</span>
-      <span>Uygulamalar</span>
-      <span (click)="logout()" style="cursor: pointer; color: white;">Çıkış Yap</span>
+      <!-- Kullanıcı Bilgisi -->
+      <div class="user-info" (click)="toggleUserMenu()" style="cursor: pointer; position: relative;">
+        <span class="user-initial">{{ currentUser.charAt(0).toUpperCase() }}</span>
+        <span class="user-name">{{ currentUser }}</span>
+        <div
+          class="user-menu"
+          *ngIf="userMenuOpen"
+          (click)="$event.stopPropagation()"
+          style="position: absolute; top: 100%; right: 0; background-color: white; color: black; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"
+        >
+          <ul style="list-style: none; margin: 0; padding: 0;">
+            <li (click)="goToProfile()" style="padding: 10px; cursor: pointer;">Profil</li>
+            <li (click)="logout()" style="padding: 10px; cursor: pointer;">Çıkış Yap</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </header>
 

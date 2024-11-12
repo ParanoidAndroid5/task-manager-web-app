@@ -31,6 +31,10 @@ export class AuthService {
     );
   }
 
+  getCurrentUsername(): string {
+    return sessionStorage.getItem('username') || '';
+  }
+
   logout(): void {
     sessionStorage.removeItem('username');
     sessionStorage.removeItem('password');

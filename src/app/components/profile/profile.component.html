@@ -1,0 +1,65 @@
+<div class="profile-container">
+    <h2>Profil Bilgileri</h2>
+  
+    <form (ngSubmit)="updateProfile()" class="profile-form">
+      <div class="form-group">
+        <label for="username">Kullanıcı Adı</label>
+        <input
+          id="username"
+          [(ngModel)]="updatedUser.username"
+          name="username"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="email">E-posta</label>
+        <input
+          id="email"
+          [(ngModel)]="updatedUser.email"
+          name="email"
+          type="email"
+          required
+        />
+      </div>
+      <button type="submit">Profil Güncelle</button>
+    </form>
+  
+    <h2>Şifre Güncelleme</h2>
+  
+    <form (ngSubmit)="updatePassword()" class="password-form">
+      <div class="form-group">
+        <label for="currentPassword">Mevcut Şifre</label>
+        <input
+          id="currentPassword"
+          [(ngModel)]="currentPassword"
+          name="currentPassword"
+          type="password"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="newPassword">Yeni Şifre</label>
+        <input
+          id="newPassword"
+          [(ngModel)]="newPassword"
+          name="newPassword"
+          type="password"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Yeni Şifre Tekrar</label>
+        <input
+          id="confirmPassword"
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          required
+        />
+      </div>
+      <button type="submit">Şifre Güncelle</button>
+    </form>
+  
+    <button (click)="goBack()" class="back-button">Geri Dön</button>
+  </div>
+  
