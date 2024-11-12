@@ -18,7 +18,7 @@ export class LoginComponent {
       next: () => {
         console.log('Giriş sonrası sessionStorage:', sessionStorage.getItem('username')); // Debug için
         alert('Giriş başarılı!');
-        this.router.navigate(['/dashboard']); 
+        this.router.navigate(['/projects']); 
       },
       error: (err) => {
         console.error(err);

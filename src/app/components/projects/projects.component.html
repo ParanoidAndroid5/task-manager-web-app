@@ -1,0 +1,15 @@
+<p>projects works!</p>
+<div class="projects-container">
+    <div class="info-message">
+      Devam etmek istediğiniz projeyi seçin.
+    </div>
+  
+    <div class="project-card" *ngFor="let project of projects" (click)="selectProject(project)">
+      <div class="project-icon">{{ project.name.charAt(0) | uppercase }}</div>
+      <div class="project-details">
+        <h3>{{ project.name }}</h3>
+        <p>{{ project.description }}</p>
+        <p class="member-count">{{ project.users.length }} üyeler</p>
+      </div>
+    </div>
+  </div>
