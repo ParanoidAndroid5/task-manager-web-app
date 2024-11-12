@@ -5,6 +5,7 @@ import { DashboardService } from '../services/dashboard.service';
 import { Task } from '../models/task.model'; 
 import { Project } from '../models/project.model'; 
 import { AuthService } from '../services/auth.service'; 
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,10 +24,14 @@ export class DashboardComponent implements OnInit {
   newTaskByProject: { [key: number]: Task } = {};
   selectedUserFilter: string | null = null;
 
+  currentUser: string = '';
+  userMenuOpen: boolean = false;
+  
   constructor(
     private taskService: TaskService, 
     private dashboardService: DashboardService, 
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -35,6 +40,22 @@ export class DashboardComponent implements OnInit {
     if (this.selectedProjectId) {
       this.loadDashboardData(this.selectedProjectId);
     }
+    this.currentUser = this.authService.getCurrentUsername();
+  }
+
+  toggleUserMenu(): void {
+    this.userMenuOpen = !this.userMenuOpen;
+  }
+
+  goToProfile(): void {
+    this.userMenuOpen = false;
+    this.router.navigate(['/profile']);
+  }
+
+  logout(): void {
+    this.userMenuOpen = false;
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   private loadDashboardData(projectId: number): void {
@@ -219,9 +240,5 @@ export class DashboardComponent implements OnInit {
     }
 
     this.applyTaskFilter();
-  }
-
-  logout(): void {
-    this.authService.logout();
   }
 }
