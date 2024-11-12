@@ -12,6 +12,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
 import { TaskDetailComponent } from './task-detail/task-detail.component';
 import { FilterStatusPipe } from './module/filter-status.pipe';
+import { ProjectsComponent } from './components/projects/projects.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { FilterStatusPipe } from './module/filter-status.pipe';
     LoginComponent,
     DashboardComponent,
     TaskDetailComponent,
-    FilterStatusPipe
+    FilterStatusPipe,
+    ProjectsComponent
   ],
   imports: [
     BrowserModule,
