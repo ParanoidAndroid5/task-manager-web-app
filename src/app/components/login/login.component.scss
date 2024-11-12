@@ -1,0 +1,91 @@
+.page-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f4f5f7;
+  }
+  
+  .login-container {
+    max-width: 400px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #ffffff;
+    text-align: center;
+  
+    h2 {
+      color: #073b9a;
+      font-weight: bold;
+    }
+  
+    p {
+      color: #666;
+    }
+  
+    .input-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      background-color: #f4f5f7;
+      padding: 8px;
+      border-radius: 5px;
+  
+      mat-icon {
+        color: #666;
+        margin-right: 8px;
+      }
+  
+      input {
+        border: none;
+        outline: none;
+        flex: 1;
+        padding: 8px;
+        background: none;
+        font-size: 14px;
+      }
+    }
+  
+    .forgot-password, .signup-link {
+      color: #073b9a;
+      font-size: 12px;
+      text-decoration: none;
+    }
+  
+    .login-button {
+      background-color: #073b9a;
+      color: #fff;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  
+    .login-button:hover {
+      background-color: #0a58ca;
+    }
+  
+    .footer-message {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+      color: #666;
+  
+      .calendar-icon {
+        font-size: 24px;
+        color: #073b9a;
+        margin-right: 8px;
+      }
+  
+      p {
+        margin: 0;
+        font-size: 14px;
+      }
+    }
+  }
+  

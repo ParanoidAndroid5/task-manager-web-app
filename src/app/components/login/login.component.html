@@ -1,1 +1,26 @@
-<p>login works!</p>
+<div class="page-container">
+    <div class="login-container">
+      <h2>Hoş Geldiniz!</h2>
+      <p>Lütfen giriş bilgilerinizi aşağıya girin</p>
+      <form (ngSubmit)="login()">
+        <div class="input-group">
+          <mat-icon>account_circle</mat-icon>
+          <input type="text" id="username" [(ngModel)]="username" name="username" placeholder="Kullanıcı adınızı girin" required>
+        </div>
+  
+        <div class="input-group">
+          <mat-icon>lock</mat-icon>
+          <input type="password" id="password" [(ngModel)]="password" name="password" placeholder="Şifrenizi girin" required>
+        </div>
+  
+        <a href="#" class="forgot-password">Şifremi unuttum?</a>
+        <button type="submit" class="login-button">Giriş Yap</button>
+      </form>
+      <p>Hesabınız yok mu? <a href="#" class="signup-link" (click)="goToRegister()">Hesap Oluştur</a></p>
+  
+      <div class="footer-message">
+        <mat-icon class="calendar-icon">event</mat-icon>
+        <p>Görevlerinizi daha kolay ve verimli bir şekilde yönetin!</p>
+      </div>
+    </div>
+  </div>

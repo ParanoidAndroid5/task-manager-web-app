@@ -1,0 +1,94 @@
+.page-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f5f7;
+  }
+  
+  .register-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  
+    h2 {
+      color: #073b9a;
+      margin-bottom: 10px;
+    }
+  
+    p {
+      color: #555;
+      margin-bottom: 20px;
+    }
+  
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+  
+      .input-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background-color: #f4f4f4;
+        padding: 10px;
+        border-radius: 5px;
+  
+        mat-icon {
+          color: #666;
+        }
+  
+        input {
+          flex: 1;
+          border: none;
+          background-color: transparent;
+          outline: none;
+          font-size: 14px;
+        }
+      }
+  
+      .register-button {
+        background-color: #073b9a;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      
+      .register-button:hover {
+        background-color: #0a58ca;
+      }
+    }
+  
+    .login-link {
+      color: #073b9a;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  
+    .footer-message {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+        color: #666;
+    
+        .calendar-icon {
+          font-size: 24px;
+          color: #073b9a;
+          margin-right: 8px;
+        }
+    
+        p {
+          margin: 0;
+          font-size: 14px;
+        }
+      }
+  }
+  
