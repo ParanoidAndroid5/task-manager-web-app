@@ -32,78 +32,170 @@
 
     <!-- Pano -->
     <div class="board">
-      <h2>Pano</h2>
-      <div class="board-columns">
-        <div *ngFor="let project of projects" class="project-section">
-          <h3>{{ project.name }}</h3>
-          <p>{{ project.description }}</p>
-        
-          <!-- Görevler Sütunu -->
-          <div class="board-columns">
-            <!-- YAPILACAKLAR Sütunu -->
-            <div class="column" cdkDropList id="project-{{ project.id }}-todo" 
-                 [cdkDropListData]="tasksByProject[project.id]" 
-                 [cdkDropListConnectedTo]="['project-' + project.id + '-inProgress', 'project-' + project.id + '-done']" 
-                 (cdkDropListDropped)="drop($event)">
-              <h4>YAPILACAKLAR</h4>
-              <div class="card" *ngFor="let task of tasksByProject[project.id] | filterStatus:'TODO'" 
-                   cdkDrag (click)="openTaskDetail(task)">
-                <h5>{{ task.title }}</h5>
-                <p>{{ task.description }}</p>
-                <span class="label">Öncelik: {{ task.priority }}</span>
-                <button (click)="deleteTask(task, project.id); $event.stopPropagation()">Sil</button>
-              </div>
+      <div class="board-header">
+        <!-- Proje Bilgileri ve Filtreleme Bölümü -->
+        <div class="project-info">
+          <h2>{{ projects[0]?.name }}</h2>
+          <p>{{ projects[0]?.description }}</p>
+        </div>
+        <!-- Kullanıcı Filtreleme Bölümü -->
+        <div class="user-filter-section" *ngIf="selectedProjectId !== null">
+          <h3>Görevleri Kullanıcıya Göre Filtrele</h3>
+          <div class="filter-container">
+            <div
+              class="user-avatar"
+              *ngFor="let user of usersByProject[selectedProjectId!]"
+              [title]="user.username"
+              [ngClass]="{ selected: selectedUserFilter === user.username }"
+              (click)="filterByUser(user.username)"
+            >
+              {{ user.username.charAt(0).toUpperCase() }}
             </div>
-
-            <!-- DEVAM EDENLER Sütunu -->
-            <div class="column" cdkDropList id="project-{{ project.id }}-inProgress" 
-                 [cdkDropListData]="tasksByProject[project.id]" 
-                 [cdkDropListConnectedTo]="['project-' + project.id + '-todo', 'project-' + project.id + '-done']" 
-                 (cdkDropListDropped)="drop($event)">
-              <h4>DEVAM EDENLER</h4>
-              <div class="card" *ngFor="let task of tasksByProject[project.id] | filterStatus:'IN_PROGRESS'" 
-                   cdkDrag (click)="openTaskDetail(task)">
-                <h5>{{ task.title }}</h5>
-                <p>{{ task.description }}</p>
-                <span class="label">Öncelik: {{ task.priority }}</span>
-                <button (click)="deleteTask(task, project.id); $event.stopPropagation()">Sil</button>
-              </div>
-            </div>
-
-            <!-- TAMAMLANANLAR Sütunu -->
-            <div class="column" cdkDropList id="project-{{ project.id }}-done" 
-                 [cdkDropListData]="tasksByProject[project.id]" 
-                 [cdkDropListConnectedTo]="['project-' + project.id + '-todo', 'project-' + project.id + '-inProgress']" 
-                 (cdkDropListDropped)="drop($event)">
-              <h4>TAMAMLANANLAR</h4>
-              <div class="card" *ngFor="let task of tasksByProject[project.id] | filterStatus:'DONE'" 
-                   cdkDrag (click)="openTaskDetail(task)">
-                <h5>{{ task.title }}</h5>
-                <p>{{ task.description }}</p>
-                <span class="label">{{ task.status }}</span>
-                <button (click)="deleteTask(task, project.id); $event.stopPropagation()">Sil</button>
-              </div>
+            <div
+              class="user-avatar clear-filter"
+              title="Filtreyi Temizle"
+              [ngClass]="{ selected: selectedUserFilter === null }"
+              (click)="filterByUser(null)"
+            >
+              ✕
             </div>
           </div>
-          <!-- Yeni Görev Ekleme Formu (Projeye Özel) -->
-          <div class="new-task-form">
-            <h3>Yeni Görev Ekle</h3>
-            <form (ngSubmit)="addTask(project.id)">
-              <input type="text" [(ngModel)]="newTaskByProject[project.id].title" name="title-{{project.id}}" placeholder="Başlık" required />
-              <textarea [(ngModel)]="newTaskByProject[project.id].description" name="description-{{project.id}}" placeholder="Açıklama"></textarea>
-              <select [(ngModel)]="newTaskByProject[project.id].priority" name="priority-{{project.id}}">
-                <option value="LOW">Düşük</option>
-                <option value="MEDIUM">Orta</option>
-                <option value="HIGH">Yüksek</option>
-              </select>
-              <!-- Atanan Kullanıcı Seçimi (opsiyonel) -->
-              <select [(ngModel)]="selectedAssigneeByProject[project.id]" name="assignee-{{project.id}}">
-                <option value="">Atanmamış</option>
-                <option *ngFor="let user of usersByProject[project.id]" [value]="user.username">{{ user.username }}</option>
-              </select>
-              <button type="submit">Ekle</button>
-            </form>
+        </div>
+      </div>
+
+      <!-- Görevler Sütunu -->
+      <div *ngFor="let project of projects" class="project-section">
+        <div class="board-columns">
+          <!-- YAPILACAKLAR Sütunu -->
+          <div
+            class="column"
+            cdkDropList
+            id="project-{{ project.id }}-todo"
+            [cdkDropListData]="filteredTasksByProject[project.id]"
+            [cdkDropListConnectedTo]="[
+              'project-' + project.id + '-inProgress',
+              'project-' + project.id + '-done'
+            ]"
+            (cdkDropListDropped)="drop($event)"
+          >
+            <h4>YAPILACAKLAR</h4>
+            <div
+              class="card"
+              *ngFor="let task of filteredTasksByProject[project.id] | filterStatus: 'TODO'"
+              cdkDrag
+              (click)="openTaskDetail(task)"
+            >
+              <div class="assignee-avatar" *ngIf="task.assigneeUsername">
+                {{ task.assigneeUsername.charAt(0).toUpperCase() }}
+              </div>
+              <h5>{{ task.title }}</h5>
+              <p>{{ task.description }}</p>
+              <span class="label">Öncelik: {{ task.priority }}</span>
+              <button (click)="deleteTask(task, project.id); $event.stopPropagation()">Sil</button>
+            </div>
           </div>
+
+          <!-- DEVAM EDENLER Sütunu -->
+          <div
+            class="column"
+            cdkDropList
+            id="project-{{ project.id }}-inProgress"
+            [cdkDropListData]="filteredTasksByProject[project.id]"
+            [cdkDropListConnectedTo]="[
+              'project-' + project.id + '-todo',
+              'project-' + project.id + '-done'
+            ]"
+            (cdkDropListDropped)="drop($event)"
+          >
+            <h4>DEVAM EDENLER</h4>
+            <div
+              class="card"
+              *ngFor="let task of filteredTasksByProject[project.id] | filterStatus: 'IN_PROGRESS'"
+              cdkDrag
+              (click)="openTaskDetail(task)"
+            >
+              <div class="assignee-avatar" *ngIf="task.assigneeUsername">
+                {{ task.assigneeUsername.charAt(0).toUpperCase() }}
+              </div>
+              <h5>{{ task.title }}</h5>
+              <p>{{ task.description }}</p>
+              <span class="label">Öncelik: {{ task.priority }}</span>
+              <button (click)="deleteTask(task, project.id); $event.stopPropagation()">Sil</button>
+            </div>
+          </div>
+
+          <!-- TAMAMLANANLAR Sütunu -->
+          <div
+            class="column"
+            cdkDropList
+            id="project-{{ project.id }}-done"
+            [cdkDropListData]="filteredTasksByProject[project.id]"
+            [cdkDropListConnectedTo]="[
+              'project-' + project.id + '-todo',
+              'project-' + project.id + '-inProgress'
+            ]"
+            (cdkDropListDropped)="drop($event)"
+          >
+            <h4>TAMAMLANANLAR</h4>
+            <div
+              class="card"
+              *ngFor="let task of filteredTasksByProject[project.id] | filterStatus: 'DONE'"
+              cdkDrag
+              (click)="openTaskDetail(task)"
+            >
+              <div class="assignee-avatar" *ngIf="task.assigneeUsername">
+                {{ task.assigneeUsername.charAt(0).toUpperCase() }}
+              </div>
+              <h5>{{ task.title }}</h5>
+              <p>{{ task.description }}</p>
+              <span class="label">Öncelik: {{ task.priority }}</span>
+              <button (click)="deleteTask(task, project.id); $event.stopPropagation()">Sil</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Yeni Görev Ekleme Formu (Projeye Özel) -->
+        <div class="new-task-form">
+          <h3>Yeni Görev Ekle</h3>
+          <form (ngSubmit)="addTask(project.id)">
+            <input
+              type="text"
+              [(ngModel)]="newTaskByProject[project.id].title"
+              name="title-{{ project.id }}"
+              placeholder="Başlık"
+              required
+            />
+            <textarea
+              [(ngModel)]="newTaskByProject[project.id].description"
+              name="description-{{ project.id }}"
+              placeholder="Açıklama"
+            ></textarea>
+            <select
+              [(ngModel)]="newTaskByProject[project.id].priority"
+              name="priority-{{ project.id }}"
+            >
+              <option value="LOW">Düşük</option>
+              <option value="MEDIUM">Orta</option>
+              <option value="HIGH">Yüksek</option>
+            </select>
+            <!-- Atanan Kullanıcı Seçimi (opsiyonel) -->
+            <select
+              [(ngModel)]="selectedAssigneeByProject[project.id]"
+              name="assignee-{{ project.id }}"
+            >
+              <option value="">Atanmamış</option>
+              <option
+                *ngFor="let user of usersByProject[project.id]"
+                [value]="user.username"
+              >
+                {{ user.username }}
+              </option>
+            </select>
+            <button type="submit">Ekle</button>
+          </form>
+        </div>
+      </div>
+
       <!-- Görev Detay Popup -->
       <app-task-detail
         *ngIf="selectedTask"
