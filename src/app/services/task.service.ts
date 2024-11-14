@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Task, TaskComment } from '../models/task.model';
+import { Task, TaskComment, TaskHistory } from '../models/task.model';
 import { environment } from './environment'; 
 
 @Injectable({
@@ -57,5 +57,11 @@ export class TaskService {
   getComments(taskId: number): Observable<TaskComment[]> {
     const headers = this.getAuthHeaders();
     return this.http.get<TaskComment[]>(`${this.apiUrl}/${taskId}/comments`, { headers });
+  }
+  getTaskHistory(taskId: number): Observable<TaskHistory[]> {
+    const headers = this.getAuthHeaders();
+    return this.http.get<TaskHistory[]>(`${this.apiUrl}/${taskId}/history`, {
+      headers,
+    });
   }
 }

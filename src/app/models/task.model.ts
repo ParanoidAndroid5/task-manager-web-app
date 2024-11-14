@@ -17,3 +17,13 @@ export interface Task {
     username: string;
     createdAt: string;
   }
+
+  export interface TaskHistory {
+    id: number;
+    timestamp: string;
+    fromAssignee: string | null;
+    toAssignee: string | null;
+    changedBy: string;
+    changeType: string;
+  }
+  

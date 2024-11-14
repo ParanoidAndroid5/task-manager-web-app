@@ -34,5 +34,20 @@
         <p><strong>{{ comment.username }}:</strong> {{ comment.content }}</p>
       </div>
     </div>
-  </div>
+    <!-- Mevcut güncllemeleri listeleme -->
+    <div class="task-history">
+      <h3>Görev Geçmişi</h3>
+      <div *ngIf="loadingHistory">Geçmiş yükleniyor...</div>
+      <div *ngIf="errorLoadingHistory">Geçmiş yüklenirken bir hata oluştu.</div>
+      <ul *ngIf="!loadingHistory && taskHistory.length > 0">
+        <li *ngFor="let history of taskHistory">
+          <p>
+            <strong>{{ history.timestamp | date: 'short' }}:</strong>
+            {{ history.fromAssignee || 'Atanmamış' }} → {{ history.toAssignee || 'Atanmamış' }}
+            ({{ getHistoryDescription(history.changeType) }}, {{ history.changedBy }})
+          </p>
+        </li>
+      </ul>
+      <p *ngIf="!loadingHistory && taskHistory.length === 0">Henüz geçmiş yok.</p>
+    </div>
 </div>

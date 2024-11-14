@@ -1,8 +1,9 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { Task, TaskComment } from '../models/task.model';
+import { Task, TaskComment, TaskHistory } from '../models/task.model';
 import { TaskService } from '../services/task.service';
 import { DashboardService } from '../services/dashboard.service';
 import { Project } from '../models/project.model';
+
 @Component({
   selector: 'app-task-detail',
   templateUrl: './task-detail.component.html',
@@ -18,6 +19,19 @@ export class TaskDetailComponent implements OnInit {
   projectUsers: any[] = [];
   selectedAssignee: string = '';
 
+  taskHistory: TaskHistory[] = [];
+  loadingHistory: boolean = false;
+  errorLoadingHistory: boolean = false;
+
+  historyTypeDescriptions: { [key: string]: string } = {// bu ksıım backendten dönen changeType ı stirnge dönüştürmek için yazıldı.
+    ASSIGNEE_CHANGED: 'Atanan Kişi Değiştirildi',
+    STATUS_UPDATED: 'Durum Güncellendi',
+    TASK_CREATED: 'Görev Oluşturuldu',
+  };
+
+  getHistoryDescription(type: string): string {
+    return this.historyTypeDescriptions[type] || type;
+  }
   constructor(private taskService: TaskService, private dashboardService: DashboardService) {}
 
   ngOnInit(): void {
@@ -25,6 +39,7 @@ export class TaskDetailComponent implements OnInit {
       this.loadComments();
       this.loadProjectUsers();
       this.selectedAssignee = this.task.assigneeUsername || '';
+      this.loadTaskHistory(); 
     }
   }
 
@@ -45,6 +60,7 @@ export class TaskDetailComponent implements OnInit {
     }
   }
 
+  // Yorum ekle
   addComment(): void {
     if (this.newComment.trim() && this.task?.id != null) {
       this.taskService.addComment(this.task.id, { content: this.newComment.trim() }).subscribe({
@@ -63,7 +79,6 @@ export class TaskDetailComponent implements OnInit {
   }
 
   loadProjectUsers(): void {
-    // Projeye dahil olan kullanıcıları al
     this.dashboardService.getDashboardData().subscribe({
       next: (data) => {
         const project = data.projects.find((p: Project) => p.id === this.task.projectId);
@@ -85,11 +100,31 @@ export class TaskDetailComponent implements OnInit {
         this.task = updatedTask;
         alert('Görev atanan kişi başarıyla güncellendi.');
         this.taskUpdated.emit(updatedTask); 
+        this.loadTaskHistory();
       },
       error: (error) => {
         console.error('Görev atanan kişiyi güncelleme yetkiniz yoktur.', error);
         alert('Görev atanan kişiyi güncelleme yetkiniz yoktur.');
       }
     });
+  }
+
+  loadTaskHistory(): void {
+    if (this.task?.id != null) {
+      this.loadingHistory = true;
+      this.errorLoadingHistory = false;
+
+      this.taskService.getTaskHistory(this.task.id).subscribe({
+        next: (history) => {
+          this.taskHistory = history;
+          this.loadingHistory = false;
+        },
+        error: (error) => {
+          console.error('Görev geçmişi yüklenirken bir hata oluştu', error);
+          this.errorLoadingHistory = true;
+          this.loadingHistory = false;
+        }
+      });
+    }
   }
 }
