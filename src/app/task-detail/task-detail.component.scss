@@ -131,3 +131,16 @@ p strong {
 .comments-list p strong {
   color: #333;
 }
+.task-history {
+  margin-top: 20px;
+}
+
+.task-history ul {
+  list-style: none;
+  padding: 0;
+}
+
+.task-history li {
+  border-bottom: 1px solid #ccc;
+  padding: 10px 0;
+}
