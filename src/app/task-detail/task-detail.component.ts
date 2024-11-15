@@ -127,4 +127,10 @@ export class TaskDetailComponent implements OnInit {
       });
     }
   }
+  onBackdropClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (target.classList.contains('task-detail-modal')) {
+      this.close();
+    }
+  }
 }
