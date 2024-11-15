@@ -79,18 +79,18 @@
           <div
             class="column"
             cdkDropList
-            id="project-{{ project.id }}-todo"
-            [cdkDropListData]="filteredTasksByProject[project.id]"
+            id="project-{{ project.id }}-TODO"
+            [cdkDropListData]="filteredTasksByProject[project.id].TODO"
             [cdkDropListConnectedTo]="[
-              'project-' + project.id + '-inProgress',
-              'project-' + project.id + '-done'
+              'project-' + project.id + '-IN_PROGRESS',
+              'project-' + project.id + '-DONE'
             ]"
             (cdkDropListDropped)="drop($event)"
           >
             <h4>YAPILACAKLAR</h4>
             <div
               class="card"
-              *ngFor="let task of filteredTasksByProject[project.id] | filterStatus: 'TODO'"
+              *ngFor="let task of filteredTasksByProject[project.id].TODO"
               cdkDrag
               (click)="openTaskDetail(task)"
             >
@@ -108,18 +108,18 @@
           <div
             class="column"
             cdkDropList
-            id="project-{{ project.id }}-inProgress"
-            [cdkDropListData]="filteredTasksByProject[project.id]"
+            id="project-{{ project.id }}-IN_PROGRESS"
+            [cdkDropListData]="filteredTasksByProject[project.id].IN_PROGRESS"
             [cdkDropListConnectedTo]="[
-              'project-' + project.id + '-todo',
-              'project-' + project.id + '-done'
+              'project-' + project.id + '-TODO',
+              'project-' + project.id + '-DONE'
             ]"
             (cdkDropListDropped)="drop($event)"
           >
             <h4>DEVAM EDENLER</h4>
             <div
               class="card"
-              *ngFor="let task of filteredTasksByProject[project.id] | filterStatus: 'IN_PROGRESS'"
+              *ngFor="let task of filteredTasksByProject[project.id].IN_PROGRESS"
               cdkDrag
               (click)="openTaskDetail(task)"
             >
@@ -137,18 +137,18 @@
           <div
             class="column"
             cdkDropList
-            id="project-{{ project.id }}-done"
-            [cdkDropListData]="filteredTasksByProject[project.id]"
+            id="project-{{ project.id }}-DONE"
+            [cdkDropListData]="filteredTasksByProject[project.id].DONE"
             [cdkDropListConnectedTo]="[
-              'project-' + project.id + '-todo',
-              'project-' + project.id + '-inProgress'
+              'project-' + project.id + '-TODO',
+              'project-' + project.id + '-IN_PROGRESS'
             ]"
             (cdkDropListDropped)="drop($event)"
           >
             <h4>TAMAMLANANLAR</h4>
             <div
               class="card"
-              *ngFor="let task of filteredTasksByProject[project.id] | filterStatus: 'DONE'"
+              *ngFor="let task of filteredTasksByProject[project.id].DONE"
               cdkDrag
               (click)="openTaskDetail(task)"
             >

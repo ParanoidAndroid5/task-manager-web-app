@@ -17,7 +17,7 @@ export class DashboardComponent implements OnInit {
   projects: Project[] = [];
   selectedProjectId: number | null = null;
   tasksByProject: { [key: number]: Task[] } = {}; 
-  filteredTasksByProject: { [key: number]: Task[] } = {};
+  filteredTasksByProject: { [key: number]: { TODO: Task[]; IN_PROGRESS: Task[]; DONE: Task[] } } = {};
   usersByProject: { [key: number]: any[] } = {};
   selectedTask: Task | null = null;
   selectedAssigneeByProject: { [key: number]: string } = {};
@@ -65,7 +65,11 @@ export class DashboardComponent implements OnInit {
         if (project) {
           this.projects = [project];
           this.tasksByProject[project.id] = data.tasks[project.id] || [];
-          this.filteredTasksByProject[project.id] = [...this.tasksByProject[project.id]];
+          this.filteredTasksByProject[project.id] = {
+            TODO: this.tasksByProject[project.id].filter(task => task.status === 'TODO'),
+            IN_PROGRESS: this.tasksByProject[project.id].filter(task => task.status === 'IN_PROGRESS'),
+            DONE: this.tasksByProject[project.id].filter(task => task.status === 'DONE')
+          };
           this.usersByProject[project.id] = project.users || [];
           this.newTaskByProject[project.id] = {
             title: '',
@@ -97,13 +101,11 @@ export class DashboardComponent implements OnInit {
   private applyTaskFilter(): void {
     if (this.selectedProjectId) {
       const tasks = this.tasksByProject[this.selectedProjectId];
-      if (this.selectedUserFilter) {
-        this.filteredTasksByProject[this.selectedProjectId] = tasks.filter(
-          task => task.assigneeUsername === this.selectedUserFilter
-        );
-      } else {
-        this.filteredTasksByProject[this.selectedProjectId] = [...tasks];
-      }
+      this.filteredTasksByProject[this.selectedProjectId] = {
+        TODO: tasks.filter(task => task.status === 'TODO' && (!this.selectedUserFilter || task.assigneeUsername === this.selectedUserFilter)),
+        IN_PROGRESS: tasks.filter(task => task.status === 'IN_PROGRESS' && (!this.selectedUserFilter || task.assigneeUsername === this.selectedUserFilter)),
+        DONE: tasks.filter(task => task.status === 'DONE' && (!this.selectedUserFilter || task.assigneeUsername === this.selectedUserFilter))
+      };
     }
   }
 
@@ -116,13 +118,12 @@ export class DashboardComponent implements OnInit {
   }
 
   private mapStatus(status: string): 'TODO' | 'IN_PROGRESS' | 'DONE' {
-    switch (status.toLowerCase()) {
-      case 'todo':
+    switch (status.toUpperCase()) {
+      case 'TODO':
         return 'TODO';
-      case 'inprogress':
-      case 'in-progress':
+      case 'IN_PROGRESS':
         return 'IN_PROGRESS';
-      case 'done':
+      case 'DONE':
         return 'DONE';
       default:
         throw new Error(`Geçersiz status değeri: ${status}`);
@@ -131,45 +132,46 @@ export class DashboardComponent implements OnInit {
 
   drop(event: CdkDragDrop<Task[]>): void {
     const containerId = event.container.id;
+    const previousContainerId = event.previousContainer.id;
+
+    // ID formatı: "project-{projectId}-{STATUS}"
     const [ , projectIdStr, status ] = containerId.split('-');
     const projectId = Number(projectIdStr);
-    
-    if (event.previousContainer === event.container) {
-      // Aynı liste içinde sıralama değişti
-    } else {
-      const previousContainerId = event.previousContainer.id;
-      const [ , previousProjectIdStr ] = previousContainerId.split('-');
-      const previousProjectId = Number(previousProjectIdStr);
-      const task = this.tasksByProject[previousProjectId].find((_, idx) => idx === event.previousIndex);
-      
-      if (task) {
-        try {
-          task.status = this.mapStatus(status);
-          if (projectId !== previousProjectId) {
-            task.projectId = projectId;
-          }
-        } catch (error) {
-          console.error(error);
-          alert('Geçersiz görev durumu.');
-          return;
-        }
+    const newStatus = this.mapStatus(status);
 
-        this.taskService.updateTask(task).subscribe({
-          next: (updatedTask) => {
-            this.tasksByProject[previousProjectId] = this.tasksByProject[previousProjectId].filter(t => t.id !== task.id);
-            if (!this.tasksByProject[projectId]) {
-              this.tasksByProject[projectId] = [];
-            }
-            this.tasksByProject[projectId].push(updatedTask);
-            this.applyTaskFilter();
-          },
-          error: (error) => {
-            console.error('Görev durumu güncellenirken bir hata oluştu', error);
-            alert('Görev durumu güncellenirken bir hata oluştu.');
-            this.loadDashboardData(this.selectedProjectId!);
+    const [ , previousProjectIdStr, previousStatus ] = previousContainerId.split('-');
+    const previousProjectId = Number(previousProjectIdStr);
+    const previousStatusMapped = this.mapStatus(previousStatus);
+
+    if (previousProjectId !== projectId) {
+      console.error('Farklı projeler arası sürükleme desteklenmiyor.');
+      alert('Farklı projeler arası sürükleme desteklenmiyor.');
+      return;
+    }
+
+    const task = this.filteredTasksByProject[projectId][previousStatusMapped][event.previousIndex];
+
+    if (task) {
+      task.status = newStatus;
+
+      this.taskService.updateTask(task).subscribe({
+        next: (updatedTask) => {
+          // Eski listeden kaldır
+          this.filteredTasksByProject[projectId][previousStatusMapped].splice(event.previousIndex, 1);
+          // Yeni listeye ekle
+          this.filteredTasksByProject[projectId][newStatus].splice(event.currentIndex, 0, updatedTask);
+          // Güncel görev listesine de yansıt
+          const taskIndex = this.tasksByProject[projectId].findIndex(t => t.id === task.id);
+          if (taskIndex > -1) {
+            this.tasksByProject[projectId][taskIndex] = updatedTask;
           }
-        });
-      }
+        },
+        error: (error) => {
+          console.error('Görev durumu güncellenirken bir hata oluştu', error);
+          alert('Görev durumu güncellenirken bir hata oluştu.');
+          this.loadDashboardData(this.selectedProjectId!);
+        }
+      });
     }
   }
 
@@ -190,6 +192,7 @@ export class DashboardComponent implements OnInit {
             this.tasksByProject[task.projectId] = [];
           }
           this.tasksByProject[task.projectId].push(task);
+          // Filtre uygulanmış ise filtrelemeyi yeniden yap
           this.applyTaskFilter();
         }
         this.newTaskByProject[projectId] = {
