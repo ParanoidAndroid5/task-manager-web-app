@@ -1,4 +1,4 @@
-<div class="task-detail-modal" *ngIf="task">
+<div class="task-detail-modal" *ngIf="task" (click)="onBackdropClick($event)">
   <div class="modal-content">
     <!-- Sağ üst köşede kapatma ikonu -->
     <button class="close-button" (click)="close()">×</button>
@@ -34,7 +34,8 @@
         <p><strong>{{ comment.username }}:</strong> {{ comment.content }}</p>
       </div>
     </div>
-    <!-- Mevcut güncllemeleri listeleme -->
+
+    <!-- Görev geçmişi -->
     <div class="task-history">
       <h3>Görev Geçmişi</h3>
       <div *ngIf="loadingHistory">Geçmiş yükleniyor...</div>
@@ -50,4 +51,5 @@
       </ul>
       <p *ngIf="!loadingHistory && taskHistory.length === 0">Henüz geçmiş yok.</p>
     </div>
+  </div>
 </div>
